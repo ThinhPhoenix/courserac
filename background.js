@@ -1,4 +1,15 @@
 // Background script for Courserac extension
+// Browser compatibility layer
+const browserAPI = (function() {
+  if (typeof browser !== 'undefined') {
+    return browser;
+  } else if (typeof chrome !== 'undefined') {
+    return chrome;
+  } else {
+    throw new Error('No browser API available');
+  }
+})();
+
 let videoTabIds = new Set(); // Track video tabs created by extension
 
 // Video script to inject
@@ -6,6 +17,17 @@ const videoScript = `
   (function() {
     try {
       console.log('Courserac: Video script injected');
+      
+      // Browser compatibility layer for injected script
+      const browserAPI = (function() {
+        if (typeof browser !== 'undefined') {
+          return browser;
+        } else if (typeof chrome !== 'undefined') {
+          return chrome;
+        } else {
+          throw new Error('No browser API available');
+        }
+      })();
       
       let hasTriedPlay = false;
       let video = null;
@@ -123,11 +145,9 @@ const videoScript = `
             closeTabSent = true;
             setTimeout(() => {
               try {
-                browser.runtime.sendMessage({ action: 'closeThisTab' });
+                browserAPI.runtime.sendMessage({ action: 'closeThisTab' });
               } catch (e) {
-                if (typeof chrome !== 'undefined' && chrome.runtime) {
-                  chrome.runtime.sendMessage({ action: 'closeThisTab' });
-                }
+                console.log('Courserac: Error sending close tab message:', e.message);
               }
             }, 3000);
           }
@@ -194,7 +214,7 @@ const videoScript = `
 `;
 
 // Listen for tab creation to track new video tabs
-browser.tabs.onCreated.addListener((tab) => {
+browserAPI.tabs.onCreated.addListener((tab) => {
   if (tab.openerTabId) {
     // This tab was opened from another tab, likely by our extension
     videoTabIds.add(tab.id);
@@ -203,7 +223,7 @@ browser.tabs.onCreated.addListener((tab) => {
 });
 
 // Listen for tab updates to inject script when page loads
-browser.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
+browserAPI.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
   if (
     videoTabIds.has(tabId) &&
     changeInfo.status === "complete" &&
@@ -212,7 +232,7 @@ browser.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
     console.log("Courserac: Injecting script into tab:", tabId);
 
     // Inject the video script
-    browser.tabs
+    browserAPI.tabs
       .executeScript(tabId, {
         code: videoScript,
       })
@@ -226,12 +246,12 @@ browser.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
 });
 
 // Listen for tab removal to clean up tracking
-browser.tabs.onRemoved.addListener((tabId) => {
+browserAPI.tabs.onRemoved.addListener((tabId) => {
   videoTabIds.delete(tabId);
 });
 
 // Handle messages from content script
-browser.runtime.onMessage.addListener((message, sender, sendResponse) => {
+browserAPI.runtime.onMessage.addListener((message, sender, sendResponse) => {
   if (message.action === "openVideoTabs") {
     // Mark that we're about to open video tabs
     console.log("Courserac: Will open", message.urls.length, "video tabs");
@@ -239,7 +259,7 @@ browser.runtime.onMessage.addListener((message, sender, sendResponse) => {
     // Open each video URL in a new tab
     message.urls.forEach((url, index) => {
       setTimeout(() => {
-        browser.tabs
+        browserAPI.tabs
           .create({
             url: url,
             active: true, // Chuyển tab sang active khi mở
@@ -255,13 +275,13 @@ browser.runtime.onMessage.addListener((message, sender, sendResponse) => {
   }
   if (message.action === "closeThisTab" && sender.tab && sender.tab.id) {
     setTimeout(() => {
-      browser.tabs.remove(sender.tab.id);
+      browserAPI.tabs.remove(sender.tab.id);
     }, 3000);
   }
 });
 
 // Handle extension installation
-browser.runtime.onInstalled.addListener((details) => {
+browserAPI.runtime.onInstalled.addListener((details) => {
   if (details.reason === "install") {
     console.log("Courserac extension installed successfully!");
   }

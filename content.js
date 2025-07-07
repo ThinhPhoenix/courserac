@@ -1,4 +1,15 @@
 // Courserac Content Script
+// Browser compatibility layer
+const browserAPI = (function() {
+  if (typeof browser !== 'undefined') {
+    return browser;
+  } else if (typeof chrome !== 'undefined') {
+    return chrome;
+  } else {
+    throw new Error('No browser API available');
+  }
+})();
+
 class CourseracExtension {
   constructor() {
     this.bubble = null;
@@ -29,7 +40,7 @@ class CourseracExtension {
     this.bubble = document.createElement("div");
     this.bubble.className = "courserac-bubble";
     this.bubble.innerHTML = `
-      <img src="${browser.runtime.getURL("assets/icon.png")}" alt="Courserac" />
+      <img src="${browserAPI.runtime.getURL("assets/icon.png")}" alt="Courserac" />
     `;
 
     // Add event listeners
@@ -244,7 +255,7 @@ class CourseracExtension {
       const videoUrls = videoLinks.map((link) => link.href);
 
       // Send message to background script to open tabs with auto-injection
-      const response = await browser.runtime.sendMessage({
+      const response = await browserAPI.runtime.sendMessage({
         action: "openVideoTabs",
         urls: videoUrls,
       });
