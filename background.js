@@ -88,7 +88,6 @@ const videoScript = `
       // Main function to check for video
       const checkForVideo = () => {
         video = document.querySelector('video');
-        
         if (video) {
           console.log('Courserac: Video element found');
           
@@ -116,6 +115,20 @@ const videoScript = `
               }
             }, 3000);
           }
+          
+          // Đăng ký sự kiện khi video kết thúc
+          video.addEventListener('ended', () => {
+            setTimeout(() => {
+              try {
+                browser.runtime.sendMessage({ action: 'closeThisTab' });
+              } catch (e) {
+                // fallback cho Firefox content script không có browser
+                if (typeof chrome !== 'undefined' && chrome.runtime) {
+                  chrome.runtime.sendMessage({ action: 'closeThisTab' });
+                }
+              }
+            }, 3000);
+          });
         } else {
           // No video found, try again
           console.log('Courserac: No video found, retrying...');
@@ -226,6 +239,11 @@ browser.runtime.onMessage.addListener((message, sender, sendResponse) => {
     });
 
     sendResponse({ success: true });
+  }
+  if (message.action === "closeThisTab" && sender.tab && sender.tab.id) {
+    setTimeout(() => {
+      browser.tabs.remove(sender.tab.id);
+    }, 3000);
   }
 });
 
