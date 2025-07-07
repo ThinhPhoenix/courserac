@@ -216,7 +216,7 @@ browser.runtime.onMessage.addListener((message, sender, sendResponse) => {
         browser.tabs
           .create({
             url: url,
-            active: false, // Don't switch to the new tab
+            active: true, // Chuyển tab sang active khi mở
           })
           .then((tab) => {
             videoTabIds.add(tab.id);
