@@ -1,0 +1,181 @@
+/* Courserac Floating Bubble Styles */
+.courserac-bubble {
+  position: fixed;
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background: #0056d2;
+  box-shadow: 0 4px 20px rgba(0, 86, 211, 0.3);
+  cursor: move;
+  z-index: 10000;
+  top: 20px;
+  right: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  user-select: none;
+}
+
+.courserac-bubble img {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+/* Popup Styles */
+.courserac-popup {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 400px;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+  z-index: 10001;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  overflow: hidden;
+  display: none;
+}
+
+.courserac-popup.show {
+  display: block;
+}
+
+.courserac-popup-header {
+  background: linear-gradient(135deg, #0056d3, #0074cc);
+  color: white;
+  padding: 20px;
+  text-align: center;
+  position: relative;
+}
+
+.courserac-popup-title {
+  font-size: 20px;
+  font-weight: 600;
+  margin: 0;
+}
+
+.courserac-popup-close {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  background: none;
+  border: none;
+  color: white;
+  font-size: 24px;
+  font-weight: normal;
+  font-family: Arial, sans-serif;
+  cursor: pointer;
+  padding: 0;
+  margin: 0;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+  text-align: center;
+  vertical-align: middle;
+  transform: translateY(-1px); /* Fine-tune vertical alignment */
+}
+
+.courserac-popup-close:hover {
+  background-color: rgba(255, 255, 255, 0.2);
+}
+
+.courserac-popup-content {
+  padding: 20px;
+}
+
+.courserac-feature {
+  display: flex;
+  align-items: center;
+  padding: 15px;
+  border: 2px solid #e1e8f0;
+  border-radius: 8px;
+  margin-bottom: 15px;
+  cursor: pointer;
+  background: white;
+}
+
+.courserac-feature:hover {
+  border-color: #0056d3;
+  background: #f8fafc;
+}
+
+.courserac-feature-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 8px;
+  background: linear-gradient(135deg, #0056d3, #0074cc);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 15px;
+  color: white;
+  font-size: 18px;
+}
+
+/* Style for SVG icons in feature buttons */
+.courserac-feature-icon svg {
+  width: 20px;
+  height: 20px;
+  color: white;
+}
+
+.courserac-feature-content {
+  flex: 1;
+}
+
+.courserac-feature-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: #1a1a1a;
+  margin: 0 0 5px 0;
+}
+
+.courserac-feature-description {
+  font-size: 14px;
+  color: #666;
+  margin: 0;
+}
+
+.courserac-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 10000;
+  display: none;
+}
+
+.courserac-overlay.show {
+  display: block;
+}
+
+@keyframes courseracFadeIn {
+  from {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+  }
+}
+
+/* Loading indicator */
+.courserac-loading {
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  border: 2px solid #f3f3f3;
+  border-top: 2px solid #0056d3;
+  border-radius: 50%;
+  margin-left: 10px;
+}

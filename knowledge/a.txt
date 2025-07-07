@@ -1,0 +1,2 @@
+- Tôi muốn làm extension hỗ trợ học tập coursera tên "Courserac" khi vào trang https://www.coursera.org
+thì sẽ có một bong bóng menu tròn có thể di chuyển bằng cách drag chuột bong bóng là icon lấy hình ở ./assets

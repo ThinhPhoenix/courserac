@@ -1,0 +1,14 @@
+Các chức năng của menu
+
+khi mở ra sẽ có một popup với UI cùng vibe với coursera vào
+
+1. Xem tất cả video:
+ a. Khi truy cập vào một module bất kỳ ví dụ https://www.coursera.org/learn/dxe291-3/supplement/ASpGO/bai-phan-tich-building-your-digital-dna-lessons-from-digital-leaders-cua
+ b. Check tất cả tag <a> có chữ Video:
+ c. Mở tất cả link ở tab mới
+ d. Ở các tab mới vừa mở chạy script
+ ```js
+ const video = document.querySelector('video');
+    video.currentTime = video.duration - 1;
+    video.play();
+ ```
