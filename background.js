@@ -117,18 +117,31 @@ const videoScript = `
           }
           
           // Đăng ký sự kiện khi video kết thúc
-          video.addEventListener('ended', () => {
+          let closeTabSent = false;
+          function sendCloseTabOnce() {
+            if (closeTabSent) return;
+            closeTabSent = true;
             setTimeout(() => {
               try {
                 browser.runtime.sendMessage({ action: 'closeThisTab' });
               } catch (e) {
-                // fallback cho Firefox content script không có browser
                 if (typeof chrome !== 'undefined' && chrome.runtime) {
                   chrome.runtime.sendMessage({ action: 'closeThisTab' });
                 }
               }
             }, 3000);
+          }
+          video.addEventListener('ended', sendCloseTabOnce);
+          // Gửi khi video gần hết (>= 98%)
+          video.addEventListener('timeupdate', () => {
+            if (video.duration > 0 && video.currentTime / video.duration > 0.98) {
+              sendCloseTabOnce();
+            }
           });
+          // Fallback: sau 30s kể từ khi script chạy, nếu chưa đóng thì gửi đóng tab
+          setTimeout(() => {
+            sendCloseTabOnce();
+          }, 30000);
         } else {
           // No video found, try again
           console.log('Courserac: No video found, retrying...');
